@@ -50,7 +50,7 @@ public class UserServiceTests {
         Mockito.when(userUtil.getLoggedUsername()).thenReturn(existingUsername);
 
         Mockito.when(repository.searchUserAndRolesByUsername(existingUsername)).thenReturn(userDetails);
-        Mockito.when(repository.searchUserAndRolesByUsername(nonExistingUsername)).thenThrow(UsernameNotFoundException.class);
+        Mockito.when(repository.searchUserAndRolesByUsername(nonExistingUsername)).thenReturn(List.of());
 
     }
 
@@ -66,6 +66,7 @@ public class UserServiceTests {
 
 	@Test
 	public void authenticatedShouldThrowUsernameNotFoundExceptionWhenUserDoesNotExists() {
+        Mockito.when(userUtil.getLoggedUsername()).thenReturn(nonExistingUsername);
         Mockito.when(repository.findByUsername(nonExistingUsername)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UsernameNotFoundException.class, () -> service.authenticated());
